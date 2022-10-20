@@ -1,0 +1,83 @@
+<?php
+/** @var array $vD */
+$vD = &$varData;
+$this->headScript()
+    ->appendFile('https://unpkg.com/pdf-lib@1.4.0')
+    ->appendFile('https://unpkg.com/@pdf-lib/fontkit/dist/fontkit.umd.min.js')
+    ->appendFile('https://unpkg.com/downloadjs@1.4.7');
+?>
+<?= $this->WRequestFooter($this->_T('G_RQS_ACTS'),'sp-large',[
+    'subj'  => 'acts',
+    'types' => 'ACCEPTANCEACT',
+    'closed'   => false,
+    'filtered' => false,
+    'rowCount' => 10,
+    'contractId' => '',
+    'noCancel'     => true,
+    'noCommentAdd' => true,
+    'noFilesTab' => true,
+    'noCreator' => true
+]) ?>
+<main data-page="act-list" class="container sp-container">
+    <div class="panel panel-default sp-page">
+        <div class="panel-heading">
+            <?= $this->WPageTitle($this->_T('G_ACT_OF_COMPLETED_WORK')) ?>
+        </div>
+        <?php /** @var string $varCode */
+        if($varCode !== 'RC_OK') { ?>
+            <?= $this->WErrorHolder([$varCode,$varMsg??''], $this->url('web/spc/cabinet')) ?>
+        <?php } else { ?>
+            <div class="panel-body">
+                <div class="col-md-12">
+                    <section>
+                        <h4><?= $this->_T('G_TASKS_ON_RQS') ?></h4>
+                        <br>
+                        <table id="tasks" class="table-list sp-w100p sp-table-compact sp-rows-clickable">
+                            <thead>
+                            <tr>
+                                <th scope="col" style="width:50px;padding-right:30px;"><?= $this->_T('G_ID') ?></th>
+                                <th scope="col"><?= $this->_T('G_DESC') ?></th>
+                                <th scope="col"><?= $this->_T('HDR_TASK_D_START') ?></th>
+                                <th scope="col"><?= $this->_T('HDR_TASK_D_END') ?></th>
+                                <th scope="col"><?= $this->_T('HDR_TASK_IMPLEMENTER') ?></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+                    </section>
+                </div>
+            </div>
+        <?php } ?>
+    </div>
+    <?= $this->WDataHolder([
+        'routes' => [
+            'api' => [
+                'act' => [
+                    'tasksGet' => ['api/spc/act/tasks_get'],
+                    'toPdf'    => ['api/spc/act/pdf_get'],
+                ],
+                'digisign' => [
+                    'loadDataForPdf'  => ['api/sp/digisign/data_load_pdf'],
+                ],
+
+            ],
+            'web' => ['act' => [
+                'taskEdit'    => ['web/spc/act/edit_task',['data'=>'0']],
+                'stepBack'    => ['web/spc/act/list'],
+            ]]
+        ]
+    ]) ?>
+</main>
+
+<template data-tpl="act-table-row">
+    <tr>
+        <td>%1%</td>
+        <td>%2%</td>
+        <td>%3%</td>
+        <td>%4%</td>
+        <td>%5%</td>
+        <td>%6%</td>
+    </tr>
+</template>
+
