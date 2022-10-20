@@ -1,3 +1,7 @@
+/**
+ * const libBusyStart = () => { WcBusyUI.obj.show(); };
+ * const libBusyStop  = () => { WcBusyUI.obj.hide(); };
+ */
 class WcBusyUI extends HTMLElement {
     constructor() {
         super();
@@ -80,10 +84,8 @@ class WcBusyUI extends HTMLElement {
 
     static get obj() {
         if(!this.constructor._OBJ) {
-            this.constructor._OBJ = document.querySelector(this.tag);
-            if(!this.constructor._OBJ) {
-                this.constructor._OBJ = document.querySelector('body').appendChild(document.createElement(this.tag));
-            }
+            this.constructor._OBJ = document.querySelector(this.tag)
+                || document.querySelector('body').appendChild(document.createElement(this.tag));
             customElements.define(this.tag, WcBusyUI);
         }
         return this.constructor._OBJ;
